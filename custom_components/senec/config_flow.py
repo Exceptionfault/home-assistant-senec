@@ -19,9 +19,7 @@ _LOGGER = logging.getLogger(__name__)
 @callback
 def senec_entries(hass: HomeAssistant):
     """Return the hosts already configured."""
-    return {
-        entry.data[CONF_HOST] for entry in hass.config_entries.async_entries(DOMAIN)
-    }
+    return {entry.data[CONF_HOST] for entry in hass.config_entries.async_entries(DOMAIN)}
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -46,7 +44,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         except (OSError, HTTPError, Timeout):
             self._errors[CONF_HOST] = "cannot_connect"
             _LOGGER.error(
-                "Could not connect to Senec device at %s, check host ip address", host,
+                "Could not connect to Senec device at %s, check host ip address",
+                host,
             )
         return False
 
@@ -62,9 +61,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._errors[CONF_HOST] = "already_configured"
             else:
                 if await self._test_connection(host_entry):
-                    return self.async_create_entry(
-                        title=name, data={CONF_HOST: host_entry}
-                    )
+                    return self.async_create_entry(title=name, data={CONF_HOST: host_entry})
         else:
             user_input = {}
             user_input[CONF_NAME] = DEFAULT_NAME
@@ -74,12 +71,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_NAME, default=user_input.get(CONF_NAME, DEFAULT_NAME)
-                    ): str,
-                    vol.Required(
-                        CONF_HOST, default=user_input.get(CONF_HOST, DEFAULT_HOST)
-                    ): str,
+                    vol.Required(CONF_NAME, default=user_input.get(CONF_NAME, DEFAULT_NAME)): str,
+                    vol.Required(CONF_HOST, default=user_input.get(CONF_HOST, DEFAULT_HOST)): str,
                 }
             ),
             errors=self._errors,

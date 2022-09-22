@@ -1,16 +1,29 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v4.2.0
     hooks:
     - id: check-yaml
     - id: end-of-file-fixer
     - id: trailing-whitespace
   - repo: https://github.com/psf/black
-    rev: 19.10b0
+    rev: 22.3.0
     hooks:
     - id: black
-  - repo: https://github.com/timothycrosley/isort
-    rev: '5.1.4'
+      args:
+      - --line-length=100
+      # these folders wont be formatted by black
+      - --exclude="""\.git |
+        \.__pycache__|
+        \.hg|
+        \.mypy_cache|
+        \.tox|
+        \.venv|
+        _build|
+        buck-out|
+        build|
+        dist"""
+  - repo: https://github.com/PyCQA/isort
+    rev: '5.10.1'
     hooks:
     - id: isort
       name: isort
@@ -18,4 +31,7 @@ repos:
       require_serial: true
       language: python
       types: [python]
-      args: [--multi-line=3, --line-length=88]
+      args:
+      - --multi-line=3
+      - --line-length=100
+      - --profile=black
